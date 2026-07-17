@@ -28,6 +28,11 @@ a:hover{text-decoration-color:#F5F4F0;}
 
 <div data-screen-label="Логобук" style="background:#0A0A0B;color:#F5F4F0;font-family:'IBM Plex Sans',Arial,sans-serif;">
 
+<div style="position:fixed;left:20px;bottom:20px;z-index:100;display:flex;border:1px solid #3A3A3C;border-radius:100px;overflow:hidden;background:rgba(16,16,18,0.88);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);">
+  <button onClick="{{ setRu }}" style="font:500 12px 'JetBrains Mono',monospace;letter-spacing:0.06em;padding:9px 16px;border:none;cursor:pointer;background:{{ ruBg }};color:{{ ruFg }};">RU</button>
+  <button onClick="{{ setEn }}" style="font:500 12px 'JetBrains Mono',monospace;letter-spacing:0.06em;padding:9px 16px;border:none;cursor:pointer;background:{{ enBg }};color:{{ enFg }};">EN</button>
+</div>
+
 <!-- ═══ 00 COVER ═══ -->
 <section data-screen-label="00 Обложка" style="position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:48px;overflow:hidden;background-image:radial-gradient(rgba(245,244,240,0.13) 1px, transparent 1px);background-size:22px 22px;">
   <div style="position:absolute;inset:24px;pointer-events:none;">
@@ -38,12 +43,12 @@ a:hover{text-decoration-color:#F5F4F0;}
     <div style="position:absolute;top:0;left:32px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.08em;">CTRL+ZEN / BRAND GUIDELINES</div>
     <div style="position:absolute;top:0;right:32px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.08em;">V 1.0 — 2026</div>
     <div style="position:absolute;bottom:0;left:32px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.08em;">RU / EN</div>
-    <div style="position:absolute;bottom:0;right:32px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.08em;">11 РАЗДЕЛОВ</div>
+    <div style="position:absolute;bottom:0;right:32px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.08em;">{{ t.sections }}</div>
   </div>
   <img src="assets/logo-dark.svg" alt="Ctrl+Zen" style="width:400px;max-width:70vw;">
   <div style="display:flex;flex-direction:column;align-items:center;gap:14px;">
-    <h1 style="margin:0;font:500 clamp(28px,4vw,44px)/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Логобук и фирменный стиль<span style="display:inline-block;width:0.55em;height:1.05em;background:{{ accent }};vertical-align:-0.18em;margin-left:10px;animation:czBlink 1.1s steps(1) infinite;"></span></h1>
-    <p style="margin:0;font:400 13px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.1em;text-transform:uppercase;">Brand identity guidelines · компания разработки цифровых продуктов</p>
+    <h1 style="margin:0;font:500 clamp(28px,4vw,44px)/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.coverTitle }}<span style="display:inline-block;width:0.55em;height:1.05em;background:{{ accent }};vertical-align:-0.18em;margin-left:10px;animation:czBlink 1.1s steps(1) infinite;"></span></h1>
+    <p style="margin:0;font:400 13px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.1em;text-transform:uppercase;">{{ t.coverSub }}</p>
   </div>
 </section>
 
@@ -52,11 +57,11 @@ a:hover{text-decoration-color:#F5F4F0;}
 <!-- ═══ Оглавление ═══ -->
 <section data-screen-label="Оглавление" style="padding:72px 0;border-top:1px solid #222224;">
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 40px;">
-    <sc-for list="{{ toc }}" as="t" hint-placeholder-count="10">
-      <a href="#s{{ t.n }}" style="display:flex;gap:14px;align-items:baseline;padding:10px 0;border-bottom:1px dashed #222224;text-decoration:none;color:#F5F4F0;font:400 15px 'IBM Plex Sans',sans-serif;" style-hover="border-bottom:1px dashed #8A8A8E;">
-        <span style="font:500 12px 'JetBrains Mono',monospace;color:{{ accent }};">{{ t.n }}</span>
-        <span>{{ t.ru }}</span>
-        <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.06em;">{{ t.en }}</span>
+    <sc-for list="{{ toc }}" as="it" hint-placeholder-count="11">
+      <a href="#s{{ it.n }}" style="display:flex;gap:14px;align-items:baseline;padding:10px 0;border-bottom:1px dashed #222224;text-decoration:none;color:#F5F4F0;font:400 15px 'IBM Plex Sans',sans-serif;" style-hover="border-bottom:1px dashed #8A8A8E;">
+        <span style="font:500 12px 'JetBrains Mono',monospace;color:{{ accent }};">{{ it.n }}</span>
+        <span>{{ it.a }}</span>
+        <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.06em;">{{ it.b }}</span>
       </a>
     </sc-for>
   </div>
@@ -66,28 +71,26 @@ a:hover{text-decoration-color:#F5F4F0;}
 <section id="s01" data-screen-label="01 Идея бренда" style="padding:96px 0;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">01</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Идея бренда</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Brand idea</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h01 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h01s }}</span>
   </div>
-  <p style="margin:0 0 48px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">Имя собрано из двух клавиш. <strong style="color:#F5F4F0;">Ctrl</strong> — инженерный контроль: точность, системность, управляемая сложность. <strong style="color:#F5F4F0;">Zen</strong> — спокойствие результата: тишина, минимум, ничего лишнего. Бренд живёт в тёмном «терминальном» пространстве, где из шума частиц собирается порядок.</p>
+  <p style="margin:0 0 48px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">{{ t.s01a }}<strong style="color:#F5F4F0;">Ctrl</strong>{{ t.s01b }}<strong style="color:#F5F4F0;">Zen</strong>{{ t.s01c }}</p>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:48px;">
     <div style="border:1px solid #2A2A2C;border-radius:16px;background:#141416;padding:32px;display:flex;flex-direction:column;gap:12px;min-height:180px;position:relative;">
       <span style="position:absolute;top:24px;right:28px;font:500 18px 'JetBrains Mono',monospace;color:#8A8A8E;">^</span>
       <span style="margin-top:auto;font:500 34px 'JetBrains Mono',Consolas,monospace;">Ctrl</span>
-      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;">Инженерия. Сетки, моноширинный шрифт, HUD-разметка, технические аннотации, версии и индексы.</p>
+      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;">{{ t.cardCtrl }}</p>
     </div>
     <div style="border:1px solid #2A2A2C;border-radius:16px;background:#141416;padding:32px;display:flex;flex-direction:column;gap:12px;min-height:180px;position:relative;">
       <span style="position:absolute;top:24px;right:28px;font:500 18px 'JetBrains Mono',monospace;color:#8A8A8E;">○</span>
       <span style="margin-top:auto;font:500 34px 'JetBrains Mono',Consolas,monospace;">Zen</span>
-      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;">Дзен. Пустота как материал: много чёрного, один смысловой центр на экран, медленный спокойный ритм.</p>
+      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;">{{ t.cardZen }}</p>
     </div>
   </div>
   <div style="display:flex;gap:12px;flex-wrap:wrap;">
-    <span style="font:400 13px 'JetBrains Mono',monospace;padding:8px 16px;border:1px solid #2A2A2C;border-radius:100px;color:#C9C8C4;">инженерный</span>
-    <span style="font:400 13px 'JetBrains Mono',monospace;padding:8px 16px;border:1px solid #2A2A2C;border-radius:100px;color:#C9C8C4;">дзен</span>
-    <span style="font:400 13px 'JetBrains Mono',monospace;padding:8px 16px;border:1px solid #2A2A2C;border-radius:100px;color:#C9C8C4;">вайбкод</span>
-    <span style="font:400 13px 'JetBrains Mono',monospace;padding:8px 16px;border:1px solid #2A2A2C;border-radius:100px;color:#C9C8C4;">монохром</span>
-    <span style="font:400 13px 'JetBrains Mono',monospace;padding:8px 16px;border:1px solid #2A2A2C;border-radius:100px;color:#C9C8C4;">generative</span>
+    <sc-for list="{{ t.chips }}" as="ch" hint-placeholder-count="5">
+      <span style="font:400 13px 'JetBrains Mono',monospace;padding:8px 16px;border:1px solid #2A2A2C;border-radius:100px;color:#C9C8C4;">{{ ch }}</span>
+    </sc-for>
   </div>
 </section>
 
@@ -95,25 +98,25 @@ a:hover{text-decoration-color:#F5F4F0;}
 <section id="s02" data-screen-label="02 Логотип" style="padding:96px 0;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">02</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Логотип</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Logo</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h02 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h02s }}</span>
   </div>
-  <p style="margin:0 0 40px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">Логотип — две клавиши: Ctrl с символом «^» и Zen с символом «○» (энсо, круг дзен). Шрифт знака — Consolas. Основная среда — тёмная; светлая версия используется на бумаге и светлых носителях.</p>
+  <p style="margin:0 0 40px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">{{ t.s02lead }}</p>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:24px;">
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;">
       <div style="background:#0A0A0B;display:flex;align-items:center;justify-content:center;padding:56px 32px;"><img src="assets/logo-dark.svg" alt="Основная версия" style="width:280px;max-width:100%;"></div>
-      <figcaption style="padding:14px 20px;border-top:1px solid #2A2A2C;display:flex;justify-content:space-between;font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;"><span>Основная · на тёмном</span><span>logo-dark.svg</span></figcaption>
+      <figcaption style="padding:14px 20px;border-top:1px solid #2A2A2C;display:flex;justify-content:space-between;font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;"><span>{{ t.cap1 }}</span><span>logo-dark.svg</span></figcaption>
     </figure>
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;">
       <div style="background:#F5F4F0;display:flex;align-items:center;justify-content:center;padding:56px 32px;"><img src="assets/logo-light.svg" alt="Инверсная версия" style="width:280px;max-width:100%;"></div>
-      <figcaption style="padding:14px 20px;border-top:1px solid #2A2A2C;display:flex;justify-content:space-between;font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;"><span>Инверсная · на светлом</span><span>logo-light.svg</span></figcaption>
+      <figcaption style="padding:14px 20px;border-top:1px solid #2A2A2C;display:flex;justify-content:space-between;font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;"><span>{{ t.cap2 }}</span><span>logo-light.svg</span></figcaption>
     </figure>
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;">
       <div style="background:#0A0A0B;display:flex;align-items:center;justify-content:center;gap:32px;padding:40px 32px;">
         <img src="assets/icon-zen-dark.svg" alt="Знак Zen тёмный" style="width:110px;">
         <div style="background:#F5F4F0;border-radius:12px;padding:10px;"><img src="assets/icon-zen-light.svg" alt="Знак Zen светлый" style="width:90px;display:block;"></div>
       </div>
-      <figcaption style="padding:14px 20px;border-top:1px solid #2A2A2C;display:flex;justify-content:space-between;font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;"><span>Знак · клавиша Zen: аватары, фавикон</span><span>icon-zen.svg</span></figcaption>
+      <figcaption style="padding:14px 20px;border-top:1px solid #2A2A2C;display:flex;justify-content:space-between;font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;"><span>{{ t.cap3 }}</span><span>icon-zen.svg</span></figcaption>
     </figure>
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;">
       <div style="background:#0A0A0B;display:flex;align-items:center;justify-content:center;padding:40px 32px;">
@@ -125,32 +128,32 @@ a:hover{text-decoration-color:#F5F4F0;}
           <span style="position:absolute;right:8px;top:50%;transform:translateY(-50%);font:400 11px 'JetBrains Mono',monospace;color:{{ accent }};">X</span>
         </div>
       </div>
-      <figcaption style="padding:14px 20px;border-top:1px solid #2A2A2C;display:flex;justify-content:space-between;font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;"><span>Охранное поле: X = ¼ высоты клавиши</span><span>clear space</span></figcaption>
+      <figcaption style="padding:14px 20px;border-top:1px solid #2A2A2C;display:flex;justify-content:space-between;font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;"><span>{{ t.cap4 }}</span><span>clear space</span></figcaption>
     </figure>
   </div>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:56px;">
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:8px;">
-      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Мин. размер · экран</span>
+      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.m1l }}</span>
       <span style="font:500 22px 'JetBrains Mono',monospace;">120 px</span>
-      <span style="font:400 13px 'IBM Plex Sans',sans-serif;color:#8A8A8E;">ширина полного лого; знак — от 24 px</span>
+      <span style="font:400 13px 'IBM Plex Sans',sans-serif;color:#8A8A8E;">{{ t.m1n }}</span>
     </div>
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:8px;">
-      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Мин. размер · печать</span>
+      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.m2l }}</span>
       <span style="font:500 22px 'JetBrains Mono',monospace;">25 mm</span>
-      <span style="font:400 13px 'IBM Plex Sans',sans-serif;color:#8A8A8E;">ширина полного лого; знак — от 6 mm</span>
+      <span style="font:400 13px 'IBM Plex Sans',sans-serif;color:#8A8A8E;">{{ t.m2n }}</span>
     </div>
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:8px;">
-      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Геометрия клавиши</span>
+      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.m3l }}</span>
       <span style="font:500 22px 'JetBrains Mono',monospace;">R = 6.25%</span>
-      <span style="font:400 13px 'IBM Plex Sans',sans-serif;color:#8A8A8E;">радиус угла = 1/16 стороны; обводка = 1/58 стороны</span>
+      <span style="font:400 13px 'IBM Plex Sans',sans-serif;color:#8A8A8E;">{{ t.m3n }}</span>
     </div>
   </div>
-  <h3 style="margin:0 0 24px;font:500 22px 'JetBrains Mono',Consolas,monospace;">Недопустимое использование</h3>
+  <h3 style="margin:0 0 24px;font:500 22px 'JetBrains Mono',Consolas,monospace;">{{ t.misuse }}</h3>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
     <sc-for list="{{ donts }}" as="d" hint-placeholder-count="6">
       <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;">
         <div style="background:#111113;height:150px;display:flex;align-items:center;justify-content:center;overflow:hidden;background-image:{{ d.bg }};background-size:14px 14px;">
-          <img src="assets/logo-dark.svg" alt="" style="width:170px;filter:{{ d.filter }};transform:{{ d.transform }};font-family:{{ d.font }};">
+          <img src="assets/logo-dark.svg" alt="" style="width:170px;filter:{{ d.filter }};transform:{{ d.transform }};">
         </div>
         <figcaption style="padding:12px 18px;border-top:1px solid #2A2A2C;display:flex;gap:10px;align-items:baseline;font:400 13px 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="font:500 13px 'JetBrains Mono',monospace;color:#FF5A3C;">✕</span>{{ d.label }}</figcaption>
       </figure>
@@ -162,12 +165,12 @@ a:hover{text-decoration-color:#F5F4F0;}
 <section id="s03" data-screen-label="03 Цвет" style="padding:96px 0;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">03</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Цвет</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Color</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h03 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h03s }}</span>
   </div>
-  <p style="margin:0 0 40px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">Палитра строго монохромная — как терминал. Цвет допускается только внутри контента (скриншоты продуктов, арты), никогда — в элементах айдентики и UI-хроме.</p>
+  <p style="margin:0 0 40px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">{{ t.s03lead }}</p>
   <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:32px;">
-    <sc-for list="{{ colors }}" as="c" hint-placeholder-count="5">
+    <sc-for list="{{ colors }}" as="c" hint-placeholder-count="6">
       <div style="border:1px solid #2A2A2C;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;">
         <div style="height:110px;background:{{ c.hex }};"></div>
         <div style="padding:14px 16px;display:flex;flex-direction:column;gap:4px;border-top:1px solid #2A2A2C;">
@@ -179,7 +182,7 @@ a:hover{text-decoration-color:#F5F4F0;}
     </sc-for>
   </div>
   <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:32px;">
-    <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Пропорции · Proportions</span>
+    <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.propLabel }}</span>
     <div style="display:flex;height:36px;border-radius:8px;overflow:hidden;border:1px solid #2A2A2C;">
       <div style="width:72%;background:#0A0A0B;display:flex;align-items:center;padding-left:14px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;">VOID 72%</div>
       <div style="width:18%;background:#161618;display:flex;align-items:center;padding-left:14px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;border-left:1px solid #2A2A2C;">CARBON 18%</div>
@@ -187,11 +190,11 @@ a:hover{text-decoration-color:#F5F4F0;}
     </div>
   </div>
   <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;max-width:720px;">
-    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Белый — дефицитный ресурс: не более ~15% площади экрана, он обозначает главное.</li>
-    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Текст на Void/Carbon — Paper (контраст ≥ 15:1) или Ash для вторичного (≥ 4.6:1, AA).</li>
-    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span><span>Акцент <strong style="color:{{ accent }};font-family:'JetBrains Mono',monospace;font-weight:500;">Signal</strong> — единственный цвет системы. Только для микроэлементов: мигающий курсор, индексы разделов, маркеры «—», статусы. Не более ~1% площади экрана.</span></li>
-    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span><span>Signal никогда не используется для заливок кнопок, крупного текста, иконок и логотипа — они всегда монохромные.</span></li>
-    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Никаких цветных градиентов. Глубина — только светом: прозрачности белого 4–13%.</li>
+    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>{{ t.cb1 }}</li>
+    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>{{ t.cb2 }}</li>
+    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span><span>{{ t.sigA }}<strong style="color:{{ accent }};font-family:'JetBrains Mono',monospace;font-weight:500;">Signal</strong>{{ t.sigB }}</span></li>
+    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span><span>{{ t.cb4 }}</span></li>
+    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>{{ t.cb5 }}</li>
   </ul>
 </section>
 
@@ -199,21 +202,21 @@ a:hover{text-decoration-color:#F5F4F0;}
 <section id="s04" data-screen-label="04 Типографика" style="padding:96px 0;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">04</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Типографика</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Typography</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h04 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h04s }}</span>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:40px;">
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:14px;">
-      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Акцидентный · заголовки, метки, код</span>
+      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.f1l }}</span>
       <span style="font:500 46px/1.05 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">JetBrains Mono</span>
-      <p style="margin:0;font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;">В логотипе — Consolas. В вебе и макетах его заменяет JetBrains Mono (Google Fonts, есть кириллица). Начертания 400 / 500 / 700. Заголовки — 500, трекинг −0.02em.</p>
+      <p style="margin:0;font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;">{{ t.f1p }}</p>
       <span style="font:400 15px 'JetBrains Mono',monospace;color:#C9C8C4;">АБВГДабвгд 0123456789 {}=&gt;
 ABCDEFabcdef ^ ○ + /</span>
     </div>
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:14px;">
-      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Наборный · текст, интерфейсы</span>
+      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.f2l }}</span>
       <span style="font:500 46px/1.05 'IBM Plex Sans',sans-serif;letter-spacing:-0.01em;">IBM Plex Sans</span>
-      <p style="margin:0;font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;">Для абзацев длиннее двух строк и плотных интерфейсов. Начертания 400 / 500 / 600. Тоже с кириллицей — двуязычные тексты выглядят единообразно.</p>
+      <p style="margin:0;font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;">{{ t.f2p }}</p>
       <span style="font:400 15px 'IBM Plex Sans',sans-serif;color:#C9C8C4;">АБВГДабвгд 0123456789
 ABCDEFabcdef — «ё, й, щ»</span>
     </div>
@@ -227,9 +230,9 @@ ABCDEFabcdef — «ё, й, щ»</span>
     </sc-for>
   </div>
   <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;max-width:720px;">
-    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Подписи и метки (caption) — всегда моно, uppercase, трекинг +0.08em: это «голос HUD».</li>
-    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Название пишется только как <span style="font-family:'JetBrains Mono',monospace;">Ctrl+Zen</span> — с плюсом, без пробелов, обе заглавные.</li>
-    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Максимум два размера шрифта на экран помимо основного текста. Пустота важнее слов.</li>
+    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>{{ t.tb1 }}</li>
+    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span><span>{{ t.tb2a }}<span style="font-family:'JetBrains Mono',monospace;">Ctrl+Zen</span>{{ t.tb2b }}</span></li>
+    <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>{{ t.tb3 }}</li>
   </ul>
 </section>
 
@@ -237,10 +240,10 @@ ABCDEFabcdef — «ё, й, щ»</span>
 <section id="s05" data-screen-label="05 Графические приёмы" style="padding:96px 0;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">05</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Графические приёмы</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Patterns &amp; techniques</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h05 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h05s }}</span>
   </div>
-  <p style="margin:0 0 40px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">Шесть фирменных фактур из мудборда. Все воспроизводятся чистым CSS — образцы ниже живые, сниппет под каждым можно копировать в код. Правило: <strong style="color:#F5F4F0;">один приём на экран</strong>, поверх чёрного, деликатно.</p>
+  <p style="margin:0 0 40px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">{{ t.s05a }}<strong style="color:#F5F4F0;">{{ t.s05strong }}</strong>{{ t.s05b }}</p>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;">
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;">
       <div style="height:190px;background:#0A0A0B;background-image:radial-gradient(rgba(245,244,240,0.35) 1px, transparent 1px);background-size:14px 14px;"></div>
@@ -253,14 +256,14 @@ ABCDEFabcdef — «ё, й, щ»</span>
       <div style="height:190px;background:#0A0A0B;background-image:radial-gradient(rgba(245,244,240,0.8) 1px, transparent 1.4px);background-size:7px 7px;-webkit-mask-image:linear-gradient(180deg,transparent 8%, #000 95%);mask-image:linear-gradient(180deg,transparent 8%, #000 95%);"></div>
       <figcaption style="padding:16px 20px;border-top:1px solid #2A2A2C;display:flex;flex-direction:column;gap:8px;">
         <span style="font:500 15px 'IBM Plex Sans',sans-serif;">Дизеринг-градиент · Dither fade</span>
-        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">точечная сетка + mask-image: linear-gradient(...) — переходы «частицами», не плавные</code>
+        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.p2 }}</code>
       </figcaption>
     </figure>
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;">
       <div style="height:190px;background-color:#0A0A0B;background-image:repeating-radial-gradient(circle at 38% 50%, rgba(245,244,240,0.5) 0 1px, transparent 1px 6px),repeating-radial-gradient(circle at 62% 50%, rgba(245,244,240,0.5) 0 1px, transparent 1px 6px);"></div>
       <figcaption style="padding:16px 20px;border-top:1px solid #2A2A2C;display:flex;flex-direction:column;gap:8px;">
         <span style="font:500 15px 'IBM Plex Sans',sans-serif;">Муар · Interference</span>
-        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">2 × repeating-radial-gradient со смещёнными центрами — для обложек и заглушек</code>
+        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.p3 }}</code>
       </figcaption>
     </figure>
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;">
@@ -269,7 +272,7 @@ ABCDEFabcdef — «ё, й, щ»</span>
       </div>
       <figcaption style="padding:16px 20px;border-top:1px solid #2A2A2C;display:flex;flex-direction:column;gap:8px;">
         <span style="font:500 15px 'IBM Plex Sans',sans-serif;">Wireframe-перспектива · Grid horizon</span>
-        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">линейная сетка + transform: perspective() rotateX(58deg)</code>
+        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.p4 }}</code>
       </figcaption>
     </figure>
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;">
@@ -286,7 +289,7 @@ ABCDEFabcdef — «ё, й, щ»</span>
       </div>
       <figcaption style="padding:16px 20px;border-top:1px solid #2A2A2C;display:flex;flex-direction:column;gap:8px;">
         <span style="font:500 15px 'IBM Plex Sans',sans-serif;">HUD-аннотации · Annotations</span>
-        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">уголки-скобки, перекрестия, индексы 01/02, координаты — моно 10–11px, Ash</code>
+        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.p5 }}</code>
       </figcaption>
     </figure>
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;display:flex;flex-direction:column;">
@@ -295,7 +298,7 @@ ABCDEFabcdef — «ё, й, щ»</span>
       </div>
       <figcaption style="padding:16px 20px;border-top:1px solid #2A2A2C;display:flex;flex-direction:column;gap:8px;">
         <span style="font:500 15px 'IBM Plex Sans',sans-serif;">Тёмное стекло · Dark glass</span>
-        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">rgba(255,255,255,.05) + blur(10px) + inset-блик сверху — только для плавающих панелей</code>
+        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.p6 }}</code>
       </figcaption>
     </figure>
   </div>
@@ -305,12 +308,12 @@ ABCDEFabcdef — «ё, й, щ»</span>
 <section id="s06" data-screen-label="06 Иконки и иллюстрации" style="padding:96px 0;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">06</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Иконки и иллюстрации</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Icons &amp; imagery</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h06 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h06s }}</span>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:20px;">
-      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Иконки · Icons</span>
+      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.iconsLabel }}</span>
       <div style="display:flex;gap:16px;flex-wrap:wrap;">
         <div style="width:56px;height:56px;border:1px solid #2A2A2C;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5F4F0" stroke-width="1.5"><path d="M6 15L12 9L18 15"></path></svg></div>
         <div style="width:56px;height:56px;border:1px solid #2A2A2C;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5F4F0" stroke-width="1.5"><circle cx="12" cy="12" r="7"></circle></svg></div>
@@ -319,20 +322,20 @@ ABCDEFabcdef — «ё, й, щ»</span>
         <div style="width:56px;height:56px;border:1px solid #2A2A2C;border-radius:12px;display:flex;align-items:center;justify-content:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#F5F4F0" stroke-width="1.5"><rect x="5" y="5" width="14" height="14" rx="3"></rect></svg></div>
       </div>
       <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
-        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— контур 1.5 px, без заливок, сетка 24×24, концы линий прямые;</li>
-        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— словарь клавиатуры и терминала: ^, ○, +, /, скобки, стрелки;</li>
-        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— готовые наборы: Lucide или Feather в stroke 1.5 — совпадают со стилем.</li>
+        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— {{ t.ib1 }}</li>
+        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— {{ t.ib2 }}</li>
+        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— {{ t.ib3 }}</li>
       </ul>
     </div>
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:32px;display:flex;flex-direction:column;gap:20px;">
-      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Иллюстрации · Imagery</span>
+      <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.imgLabel }}</span>
       <div style="height:130px;border:1px dashed #4A4A4E;border-radius:12px;display:flex;align-items:center;justify-content:center;background:repeating-linear-gradient(45deg, transparent 0 10px, rgba(245,244,240,0.04) 10px 20px);">
         <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;">generative particle art · b/w</span>
       </div>
       <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px;">
-        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— стиль: <em style="font-style:normal;color:#F5F4F0;">generative particle art</em> — поля частиц, particle dissolve/morph («песок», собирающийся в форму), звёздный шум, wireframe-объекты — ч/б, на чёрном; <a href="Particle Dissolve.dc.html">живое демо →</a></li>
-        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— один светящийся центр композиции, вокруг — пустота (принцип «дзен»);</li>
-        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— фото: перевод в ч/б, зерно, затемнение до 60%, поверх — HUD-аннотации.</li>
+        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— {{ t.mb1a }}<em style="font-style:normal;color:#F5F4F0;">generative particle art</em>{{ t.mb1b }} <a href="Particle Dissolve.dc.html">{{ t.demoLink }}</a></li>
+        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— {{ t.mb2 }}</li>
+        <li style="font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;">— {{ t.mb3 }}</li>
       </ul>
     </div>
   </div>
@@ -342,27 +345,26 @@ ABCDEFabcdef — «ё, й, щ»</span>
 <section id="s07" data-screen-label="07 Тон коммуникации" style="padding:96px 0;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">07</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Тон коммуникации</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Tone of voice</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h07 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h07s }}</span>
   </div>
   <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:40px;">
-    <div style="border:1px solid #2A2A2C;border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:8px;"><span style="font:500 15px 'JetBrains Mono',monospace;">Коротко</span><span style="font:400 13px/1.55 'IBM Plex Sans',sans-serif;color:#8A8A8E;">Как команда в терминале. Одно предложение вместо трёх.</span></div>
-    <div style="border:1px solid #2A2A2C;border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:8px;"><span style="font:500 15px 'JetBrains Mono',monospace;">Спокойно</span><span style="font:400 13px/1.55 'IBM Plex Sans',sans-serif;color:#8A8A8E;">Без хайпа, восклицаний и «революций». Уверенность — тихая.</span></div>
-    <div style="border:1px solid #2A2A2C;border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:8px;"><span style="font:500 15px 'JetBrains Mono',monospace;">Точно</span><span style="font:400 13px/1.55 'IBM Plex Sans',sans-serif;color:#8A8A8E;">Цифры, сроки, версии. Конкретика вместо оценочных слов.</span></div>
-    <div style="border:1px solid #2A2A2C;border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:8px;"><span style="font:500 15px 'JetBrains Mono',monospace;">С иронией</span><span style="font:400 13px/1.55 'IBM Plex Sans',sans-serif;color:#8A8A8E;">Лёгкий гик-юмор дозированно. Никогда — в ущерб ясности.</span></div>
+    <sc-for list="{{ t.toneCards }}" as="tc" hint-placeholder-count="4">
+      <div style="border:1px solid #2A2A2C;border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:8px;"><span style="font:500 15px 'JetBrains Mono',monospace;">{{ tc.t }}</span><span style="font:400 13px/1.55 'IBM Plex Sans',sans-serif;color:#8A8A8E;">{{ tc.d }}</span></div>
+    </sc-for>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;">
-      <span style="font:500 13px 'JetBrains Mono',monospace;color:#8A8A8E;">✓ ПИШЕМ</span>
-      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#F5F4F0;">«Запустили за 6 недель. Работает.»</p>
-      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#F5F4F0;">«MVP → продакшн. Без лишних движений.»</p>
-      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#F5F4F0;">"Ship calm. Ctrl+Zen."</p>
+      <span style="font:500 13px 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.doHead }}</span>
+      <sc-for list="{{ t.doItems }}" as="di" hint-placeholder-count="3">
+        <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#F5F4F0;">{{ di }}</p>
+      </sc-for>
     </div>
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:28px;display:flex;flex-direction:column;gap:14px;">
-      <span style="font:500 13px 'JetBrains Mono',monospace;color:#FF5A3C;">✕ НЕ ПИШЕМ</span>
-      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;text-decoration:line-through;">«Революционные инновационные решения под ключ!!!»</p>
-      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;text-decoration:line-through;">«Лучшая команда №1 на рынке 🚀🔥»</p>
-      <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;text-decoration:line-through;">Канцелярит: «осуществляем деятельность по разработке»</p>
+      <span style="font:500 13px 'JetBrains Mono',monospace;color:#FF5A3C;">{{ t.dontHead }}</span>
+      <sc-for list="{{ t.dontItems }}" as="dn" hint-placeholder-count="3">
+        <p style="margin:0;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#8A8A8E;text-decoration:line-through;">{{ dn }}</p>
+      </sc-for>
     </div>
   </div>
 </section>
@@ -371,8 +373,8 @@ ABCDEFabcdef — «ё, й, щ»</span>
 <section id="s08" data-screen-label="08 Носители" style="padding:96px 0;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">08</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Носители</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Applications</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h08 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h08s }}</span>
   </div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;">
     <figure style="margin:0;display:flex;flex-direction:column;gap:12px;">
@@ -389,7 +391,7 @@ ABCDEFabcdef — «ё, й, щ»</span>
           </div>
         </div>
       </div>
-      <figcaption style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;">Визитка 88×50 мм · лого сверху, данные по нижней кромке</figcaption>
+      <figcaption style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.car1 }}</figcaption>
     </figure>
     <figure style="margin:0;display:flex;flex-direction:column;gap:12px;">
       <div style="border:1px solid #2A2A2C;border-radius:16px;background:#111113;display:flex;align-items:center;justify-content:center;padding:48px;">
@@ -401,7 +403,7 @@ ABCDEFabcdef — «ё, й, щ»</span>
           <div style="position:absolute;right:-30px;bottom:-40px;width:180px;height:140px;background-image:radial-gradient(rgba(245,244,240,0.5) 1px, transparent 1px);background-size:7px 7px;-webkit-mask-image:radial-gradient(circle at 70% 70%, #000 20%, transparent 70%);mask-image:radial-gradient(circle at 70% 70%, #000 20%, transparent 70%);"></div>
         </div>
       </div>
-      <figcaption style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;">Слайд 16:9 · колонтитулы-HUD, заголовок у левого края</figcaption>
+      <figcaption style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.car2 }}</figcaption>
     </figure>
     <figure style="margin:0;display:flex;flex-direction:column;gap:12px;">
       <div style="border:1px solid #2A2A2C;border-radius:16px;background:#111113;display:flex;align-items:center;justify-content:center;padding:48px;">
@@ -410,7 +412,7 @@ ABCDEFabcdef — «ё, й, щ»</span>
           <span style="position:absolute;bottom:20px;left:20px;right:20px;font:500 17px/1.3 'JetBrains Mono',monospace;letter-spacing:-0.01em;">Как мы вайбкодим прод без страха</span>
         </div>
       </div>
-      <figcaption style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;">Пост 1:1 · знак в углу, одна мысль, одна фактура</figcaption>
+      <figcaption style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.car3 }}</figcaption>
     </figure>
     <figure style="margin:0;display:flex;flex-direction:column;gap:12px;">
       <div style="border:1px solid #2A2A2C;border-radius:16px;background:#111113;display:flex;align-items:center;justify-content:center;padding:48px;">
@@ -426,7 +428,7 @@ ABCDEFabcdef — «ё, й, щ»</span>
           </div>
         </div>
       </div>
-      <figcaption style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;">Веб · шапка со знаком, hero без изображений — текст и фактура</figcaption>
+      <figcaption style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.car4 }}</figcaption>
     </figure>
   </div>
 </section>
@@ -435,46 +437,46 @@ ABCDEFabcdef — «ё, й, щ»</span>
 <section id="s09" data-screen-label="09 Веб и вёрстка" style="padding:96px 0;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">09</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Веб и вёрстка</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Frontend rules</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h09 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h09s }}</span>
   </div>
   <div style="display:grid;grid-template-columns:1.1fr 1fr;gap:24px;margin-bottom:24px;">
     <div style="border:1px solid #2A2A2C;border-radius:16px;padding:28px;background:#111113;overflow:auto;">
       <pre style="margin:0;font:400 12.5px/1.7 'JetBrains Mono',monospace;color:#C9C8C4;">:root {
-  /* цвет */
-  --cz-void:    #0A0A0B;  /* фон страницы */
-  --cz-carbon:  #161618;  /* карточки, клавиши */
-  --cz-line:    #2A2A2C;  /* границы 1px */
-  --cz-ash:     #8A8A8E;  /* вторичный текст */
-  --cz-paper:   #F5F4F0;  /* текст, лого */
+  /* цвет / color */
+  --cz-void:    #0A0A0B;
+  --cz-carbon:  #161618;
+  --cz-line:    #2A2A2C;
+  --cz-ash:     #8A8A8E;
+  --cz-paper:   #F5F4F0;
+  --cz-signal:  #4DE38A;
 
-  /* шрифт */
+  /* шрифт / type */
   --cz-mono: 'JetBrains Mono', Consolas, monospace;
   --cz-sans: 'IBM Plex Sans', sans-serif;
 
-  /* радиусы: от клавиши (R = 1/16 стороны) */
+  /* радиусы / radii (R = 1/16 стороны клавиши) */
   --cz-r-s: 8px;  --cz-r-m: 12px;  --cz-r-key: 16px;
 
-  /* сетка: 8pt; отступы секций 96px */
+  /* сетка 8pt / grid */
   --cz-gap: 24px;
 
-  /* моушн */
+  /* моушн / motion */
   --cz-fast: 120ms; --cz-base: 240ms; --cz-slow: 480ms;
   --cz-ease: cubic-bezier(0.2, 0, 0, 1);
 }</pre>
     </div>
     <div style="display:flex;flex-direction:column;gap:16px;">
       <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px;">
-        <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Сетка 12 колонок, контейнер 1180px, все отступы кратны 8.</li>
-        <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Границы — 1px solid var(--cz-line). Тени не используем: глубину даёт тон поверхности и границы.</li>
-        <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Кнопки — «клавиши»: carbon-фон, радиус --cz-r-key, при нажатии утапливаются на 2px.</li>
-        <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>Фокус — 1px dashed var(--cz-ash), offset 3px. Никаких синих outline.</li>
-        <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span><span>Фактуры из раздела <a href="#s05">05</a> — только CSS-градиентами, не картинками.</span></li>
+        <sc-for list="{{ t.webB }}" as="wb" hint-placeholder-count="4">
+          <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span>{{ wb }}</li>
+        </sc-for>
+        <li style="display:flex;gap:14px;font:400 15px/1.6 'IBM Plex Sans',sans-serif;color:#C9C8C4;"><span style="color:{{ accent }};font-family:'JetBrains Mono',monospace;">—</span><span>{{ t.w5a }}<a href="#s05">05</a>{{ t.w5b }}</span></li>
       </ul>
       <div style="border:1px solid #2A2A2C;border-radius:16px;padding:24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
-        <button onClick="{{ noop }}" style="font:500 15px 'JetBrains Mono',monospace;color:#F5F4F0;background:#161618;border:1px solid #3A3A3C;border-radius:16px;padding:14px 28px;cursor:pointer;box-shadow:0 3px 0 #000, inset 0 1px 0 rgba(255,255,255,0.08);transition:transform 120ms cubic-bezier(0.2,0,0,1), box-shadow 120ms cubic-bezier(0.2,0,0,1);" style-hover="background:#1C1C1F;" style-active="transform:translateY(3px);box-shadow:0 0 0 #000, inset 0 1px 0 rgba(255,255,255,0.08);">Обсудить проект</button>
+        <button onClick="{{ noop }}" style="font:500 15px 'JetBrains Mono',monospace;color:#F5F4F0;background:#161618;border:1px solid #3A3A3C;border-radius:16px;padding:14px 28px;cursor:pointer;box-shadow:0 3px 0 #000, inset 0 1px 0 rgba(255,255,255,0.08);transition:transform 120ms cubic-bezier(0.2,0,0,1), box-shadow 120ms cubic-bezier(0.2,0,0,1);" style-hover="background:#1C1C1F;" style-active="transform:translateY(3px);box-shadow:0 0 0 #000, inset 0 1px 0 rgba(255,255,255,0.08);">{{ t.btn1 }}</button>
         <button onClick="{{ noop }}" style="font:500 15px 'JetBrains Mono',monospace;color:#0A0A0B;background:#F5F4F0;border:1px solid #F5F4F0;border-radius:16px;padding:14px 28px;cursor:pointer;box-shadow:0 3px 0 rgba(245,244,240,0.25);transition:transform 120ms cubic-bezier(0.2,0,0,1), box-shadow 120ms cubic-bezier(0.2,0,0,1);" style-active="transform:translateY(3px);box-shadow:0 0 0 rgba(245,244,240,0.25);">Primary →</button>
-        <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;">← нажмите: клавиша утапливается</span>
+        <span style="font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.btnHint }}</span>
       </div>
     </div>
   </div>
@@ -484,10 +486,10 @@ ABCDEFabcdef — «ё, й, щ»</span>
 <section id="s10" data-screen-label="10 Моушн" style="padding:96px 0 64px;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">10</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Моушн</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Motion</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h10 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h10s }}</span>
   </div>
-  <p style="margin:0 0 40px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">Движение — спокойное и механическое, как отклик клавиатуры. Ничего не «пружинит» и не летает: короткие точные переходы, дискретные шаги вместо плавных морфов. Всегда уважаем <code style="font:400 14px 'JetBrains Mono',monospace;color:#8A8A8E;">prefers-reduced-motion</code>.</p>
+  <p style="margin:0 0 40px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">{{ t.s10a }}<code style="font:400 14px 'JetBrains Mono',monospace;color:#8A8A8E;">prefers-reduced-motion</code>{{ t.s10b }}</p>
   <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-bottom:24px;">
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;">
       <div style="height:150px;background:#0A0A0B;display:flex;align-items:center;justify-content:center;">
@@ -495,7 +497,7 @@ ABCDEFabcdef — «ё, й, щ»</span>
       </div>
       <figcaption style="padding:16px 20px;border-top:1px solid #2A2A2C;display:flex;flex-direction:column;gap:8px;">
         <span style="font:500 15px 'IBM Plex Sans',sans-serif;">Курсор · Cursor blink</span>
-        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">animation: blink 1.1s steps(1) infinite — фирменный «пульс», 1 на экран</code>
+        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.mo1 }}</code>
       </figcaption>
     </figure>
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;">
@@ -504,24 +506,23 @@ ABCDEFabcdef — «ё, й, щ»</span>
       </div>
       <figcaption style="padding:16px 20px;border-top:1px solid #2A2A2C;display:flex;flex-direction:column;gap:8px;">
         <span style="font:500 15px 'IBM Plex Sans',sans-serif;">Дрейф частиц · Particle drift</span>
-        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">медленный сдвиг background-position, 8–20s linear — фоны hero-блоков</code>
+        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.mo2 }}</code>
       </figcaption>
     </figure>
     <figure style="margin:0;border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;">
       <div style="height:150px;background:#0A0A0B;display:flex;align-items:center;justify-content:center;">
-        <div style="font:400 13px 'JetBrains Mono',monospace;color:#C9C8C4;border:1px solid #2A2A2C;border-radius:12px;padding:14px 22px;animation:czFadeUp 480ms cubic-bezier(0.2,0,0,1) both;">появление блока</div>
+        <div style="font:400 13px 'JetBrains Mono',monospace;color:#C9C8C4;border:1px solid #2A2A2C;border-radius:12px;padding:14px 22px;animation:czFadeUp 480ms cubic-bezier(0.2,0,0,1) both;">{{ t.fadeDemo }}</div>
       </div>
       <figcaption style="padding:16px 20px;border-top:1px solid #2A2A2C;display:flex;flex-direction:column;gap:8px;">
         <span style="font:500 15px 'IBM Plex Sans',sans-serif;">Появление · Fade-up</span>
-        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">opacity 0→1 + translateY(12px→0), 480ms var(--cz-ease), стагер 60ms</code>
+        <code style="font:400 11px/1.5 'JetBrains Mono',monospace;color:#8A8A8E;">{{ t.mo3 }}</code>
       </figcaption>
     </figure>
   </div>
   <div style="display:flex;gap:16px;flex-wrap:wrap;">
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;border:1px solid #2A2A2C;border-radius:100px;padding:8px 16px;">--cz-fast 120ms · ховеры, нажатия</span>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;border:1px solid #2A2A2C;border-radius:100px;padding:8px 16px;">--cz-base 240ms · переходы состояний</span>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;border:1px solid #2A2A2C;border-radius:100px;padding:8px 16px;">--cz-slow 480ms · появление секций</span>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;border:1px solid #2A2A2C;border-radius:100px;padding:8px 16px;">easing cubic-bezier(0.2, 0, 0, 1)</span>
+    <sc-for list="{{ t.motionChips }}" as="mc" hint-placeholder-count="4">
+      <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;border:1px solid #2A2A2C;border-radius:100px;padding:8px 16px;">{{ mc }}</span>
+    </sc-for>
   </div>
 </section>
 
@@ -529,18 +530,18 @@ ABCDEFabcdef — «ё, й, щ»</span>
 <section id="s11" data-screen-label="11 Лого из частиц" style="padding:96px 0 64px;border-top:1px solid #222224;">
   <div style="display:flex;align-items:baseline;gap:20px;margin-bottom:16px;">
     <span style="font:500 13px 'JetBrains Mono',monospace;color:{{ accent }};">11</span>
-    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">Лого из частиц</h2>
-    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">Particle dissolve · live</span>
+    <h2 style="margin:0;font:500 38px/1.1 'JetBrains Mono',Consolas,monospace;letter-spacing:-0.02em;">{{ t.h11 }}</h2>
+    <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;text-transform:uppercase;letter-spacing:0.08em;">{{ t.h11s }}</span>
   </div>
-  <p style="margin:0 0 32px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">Эталон фирменной анимации: частицы-«песок» собираются в логотип и рассыпаются (цикл scatter → assemble → hold → dissolve). Референс для заставок, hero-блоков и видео. Курсор рассеивает частицы. <a href="Particle Dissolve.dc.html">Открыть отдельно →</a></p>
-  <div style="border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;height:72vh;min-height:420px;">
-    <dc-import name="Particle Dissolve" hint-size="100%,72vh" style="width:100%;height:100%;"></dc-import>
+  <p style="margin:0 0 32px;max-width:640px;font:400 17px/1.65 'IBM Plex Sans',sans-serif;color:#C9C8C4;text-wrap:pretty;">{{ t.s11lead }} <a href="Particle Dissolve.dc.html">{{ t.openLink }}</a></p>
+  <div style="border:1px solid #2A2A2C;border-radius:16px;overflow:hidden;height:100vh;min-height:420px;">
+    <dc-import name="Particle Dissolve" hint-size="100%,100vh" style="width:100%;height:100%;"></dc-import>
   </div>
 </section>
 
 <footer style="padding:40px 0 56px;border-top:1px solid #222224;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;">
   <img src="assets/icon-zen-dark.svg" alt="Ctrl+Zen" style="width:40px;">
-  <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.06em;">CTRL+ZEN · BRAND GUIDELINES · V 1.0 · 2026 · файлы лого: /assets</span>
+  <span style="font:400 12px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.06em;">{{ t.footer }}</span>
 </footer>
 
 </div>
@@ -551,49 +552,210 @@ ABCDEFabcdef — «ё, й, щ»</span>
 
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#4DE38A&quot;,&quot;options&quot;:[&quot;#F5F4F0&quot;,&quot;#FF5A3C&quot;,&quot;#4DE38A&quot;,&quot;#7AA7FF&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Стиль&quot;},&quot;showGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Служебное&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#4DE38A&quot;,&quot;options&quot;:[&quot;#F5F4F0&quot;,&quot;#FF5A3C&quot;,&quot;#4DE38A&quot;,&quot;#7AA7FF&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Стиль&quot;},&quot;accentSignal&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#4DE38A&quot;,&quot;options&quot;:[&quot;#4DE38A&quot;,&quot;#FF5A3C&quot;,&quot;#7AA7FF&quot;,&quot;#F5F4F0&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Стиль&quot;},&quot;showGrid&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Служебное&quot;}}">
 class Component extends DCLogic {
+  state = { lang: 'ru' };
+  L = {
+    ru: {
+      sections: '11 РАЗДЕЛОВ',
+      coverTitle: 'Логобук и фирменный стиль',
+      coverSub: 'Brand identity guidelines · компания разработки цифровых продуктов',
+      h01:'Идея бренда', h01s:'Brand idea', h02:'Логотип', h02s:'Logo', h03:'Цвет', h03s:'Color',
+      h04:'Типографика', h04s:'Typography', h05:'Графические приёмы', h05s:'Patterns & techniques',
+      h06:'Иконки и иллюстрации', h06s:'Icons & imagery', h07:'Тон коммуникации', h07s:'Tone of voice',
+      h08:'Носители', h08s:'Applications', h09:'Веб и вёрстка', h09s:'Frontend rules',
+      h10:'Моушн', h10s:'Motion', h11:'Лого из частиц', h11s:'Particle dissolve · live',
+      s01a:'Имя собрано из двух клавиш. ', s01b:' — инженерный контроль: точность, системность, управляемая сложность. ',
+      s01c:' — спокойствие результата: тишина, минимум, ничего лишнего. Бренд живёт в тёмном «терминальном» пространстве, где из шума частиц собирается порядок.',
+      cardCtrl:'Инженерия. Сетки, моноширинный шрифт, HUD-разметка, технические аннотации, версии и индексы.',
+      cardZen:'Дзен. Пустота как материал: много чёрного, один смысловой центр на экран, медленный спокойный ритм.',
+      chips:['инженерный','дзен','вайбкод','монохром','generative'],
+      s02lead:'Логотип — две клавиши: Ctrl с символом «^» и Zen с символом «○» (энсо, круг дзен). Шрифт знака — Consolas. Основная среда — тёмная; светлая версия используется на бумаге и светлых носителях.',
+      cap1:'Основная · на тёмном', cap2:'Инверсная · на светлом', cap3:'Знак · клавиша Zen: аватары, фавикон', cap4:'Охранное поле: X = ¼ высоты клавиши',
+      m1l:'Мин. размер · экран', m1n:'ширина полного лого; знак — от 24 px',
+      m2l:'Мин. размер · печать', m2n:'ширина полного лого; знак — от 6 mm',
+      m3l:'Геометрия клавиши', m3n:'радиус угла = 1/16 стороны; обводка = 1/58 стороны',
+      misuse:'Недопустимое использование',
+      dontsL:['Не перекрашивать','Не наклонять и не вращать','Не растягивать и не сжимать','Не добавлять свечение и тени','Не размещать на пёстром фоне','Не уменьшать ниже 120 px'],
+      s03lead:'Палитра строго монохромная — как терминал. Цвет допускается только внутри контента (скриншоты продуктов, арты), никогда — в элементах айдентики и UI-хроме.',
+      colorUses:['фон страницы','карточки, клавиши','границы, линии','вторичный текст, HUD','текст, лого','акцент: курсор, индексы'],
+      propLabel:'Пропорции · Proportions',
+      cb1:'Белый — дефицитный ресурс: не более ~15% площади экрана, он обозначает главное.',
+      cb2:'Текст на Void/Carbon — Paper (контраст ≥ 15:1) или Ash для вторичного (≥ 4.6:1, AA).',
+      sigA:'Акцент ', sigB:' — единственный цвет системы. Только для микроэлементов: мигающий курсор, индексы разделов, маркеры «—», статусы. Не более ~1% площади экрана.',
+      cb4:'Signal никогда не используется для заливок кнопок, крупного текста, иконок и логотипа — они всегда монохромные.',
+      cb5:'Никаких цветных градиентов. Глубина — только светом: прозрачности белого 4–13%.',
+      f1l:'Акцидентный · заголовки, метки, код',
+      f1p:'В логотипе — Consolas. В вебе и макетах его заменяет JetBrains Mono (Google Fonts, есть кириллица). Начертания 400 / 500 / 700. Заголовки — 500, трекинг −0.02em.',
+      f2l:'Наборный · текст, интерфейсы',
+      f2p:'Для абзацев длиннее двух строк и плотных интерфейсов. Начертания 400 / 500 / 600. Тоже с кириллицей — двуязычные тексты выглядят единообразно.',
+      tsSamples:['Ctrl+Zen','Спокойная разработка','Calm engineering, shipped','Основной текст набирается IBM Plex Sans — спокойный нейтральный гротеск.','HUD-метка · ID 091 / ACT'],
+      tb1:'Подписи и метки (caption) — всегда моно, uppercase, трекинг +0.08em: это «голос HUD».',
+      tb2a:'Название пишется только как ', tb2b:' — с плюсом, без пробелов, обе заглавные.',
+      tb3:'Максимум два размера шрифта на экран помимо основного текста. Пустота важнее слов.',
+      s05a:'Шесть фирменных фактур из мудборда. Все воспроизводятся чистым CSS — образцы ниже живые, сниппет под каждым можно копировать в код. Правило: ',
+      s05strong:'один приём на экран', s05b:', поверх чёрного, деликатно.',
+      p2:'точечная сетка + mask-image: linear-gradient(...) — переходы «частицами», не плавные',
+      p3:'2 × repeating-radial-gradient со смещёнными центрами — для обложек и заглушек',
+      p4:'линейная сетка + transform: perspective() rotateX(58deg)',
+      p5:'уголки-скобки, перекрестия, индексы 01/02, координаты — моно 10–11px, Ash',
+      p6:'rgba(255,255,255,.05) + blur(10px) + inset-блик сверху — только для плавающих панелей',
+      iconsLabel:'Иконки · Icons', imgLabel:'Иллюстрации · Imagery',
+      ib1:'контур 1.5 px, без заливок, сетка 24×24, концы линий прямые;',
+      ib2:'словарь клавиатуры и терминала: ^, ○, +, /, скобки, стрелки;',
+      ib3:'готовые наборы: Lucide или Feather в stroke 1.5 — совпадают со стилем.',
+      mb1a:'стиль: ', mb1b:' — поля частиц, particle dissolve/morph («песок», собирающийся в форму), звёздный шум, wireframe-объекты — ч/б, на чёрном;',
+      demoLink:'живое демо →',
+      mb2:'один светящийся центр композиции, вокруг — пустота (принцип «дзен»);',
+      mb3:'фото: перевод в ч/б, зерно, затемнение до 60%, поверх — HUD-аннотации.',
+      toneCards:[
+        {t:'Коротко', d:'Как команда в терминале. Одно предложение вместо трёх.'},
+        {t:'Спокойно', d:'Без хайпа, восклицаний и «революций». Уверенность — тихая.'},
+        {t:'Точно', d:'Цифры, сроки, версии. Конкретика вместо оценочных слов.'},
+        {t:'С иронией', d:'Лёгкий гик-юмор дозированно. Никогда — в ущерб ясности.'}],
+      doHead:'✓ ПИШЕМ', dontHead:'✕ НЕ ПИШЕМ',
+      doItems:['«Запустили за 6 недель. Работает.»','«MVP → продакшн. Без лишних движений.»','"Ship calm. Ctrl+Zen."'],
+      dontItems:['«Революционные инновационные решения под ключ!!!»','«Лучшая команда №1 на рынке 🚀🔥»','Канцелярит: «осуществляем деятельность по разработке»'],
+      car1:'Визитка 88×50 мм · лого сверху, данные по нижней кромке',
+      car2:'Слайд 16:9 · колонтитулы-HUD, заголовок у левого края',
+      car3:'Пост 1:1 · знак в углу, одна мысль, одна фактура',
+      car4:'Веб · шапка со знаком, hero без изображений — текст и фактура',
+      webB:['Сетка 12 колонок, контейнер 1180px, все отступы кратны 8.',
+        'Границы — 1px solid var(--cz-line). Тени не используем: глубину даёт тон поверхности и границы.',
+        'Кнопки — «клавиши»: carbon-фон, радиус --cz-r-key, при нажатии утапливаются на 2px.',
+        'Фокус — 1px dashed var(--cz-ash), offset 3px. Никаких синих outline.'],
+      w5a:'Фактуры из раздела ', w5b:' — только CSS-градиентами, не картинками.',
+      btn1:'Обсудить проект', btnHint:'← нажмите: клавиша утапливается',
+      s10a:'Движение — спокойное и механическое, как отклик клавиатуры. Ничего не «пружинит» и не летает: короткие точные переходы, дискретные шаги вместо плавных морфов. Всегда уважаем ', s10b:'.',
+      mo1:'animation: blink 1.1s steps(1) infinite — фирменный «пульс», 1 на экран',
+      mo2:'медленный сдвиг background-position, 8–20s linear — фоны hero-блоков',
+      mo3:'opacity 0→1 + translateY(12px→0), 480ms var(--cz-ease), стагер 60ms',
+      fadeDemo:'появление блока',
+      motionChips:['--cz-fast 120ms · ховеры, нажатия','--cz-base 240ms · переходы состояний','--cz-slow 480ms · появление секций','easing cubic-bezier(0.2, 0, 0, 1)'],
+      s11lead:'Эталон фирменной анимации: частицы-«песок» собираются в логотип и рассыпаются (цикл scatter → assemble → hold → dissolve). Референс для заставок, hero-блоков и видео. Курсор рассеивает частицы.',
+      openLink:'Открыть отдельно →',
+      footer:'CTRL+ZEN · BRAND GUIDELINES · V 1.0 · 2026 · файлы лого: /assets',
+    },
+    en: {
+      sections: '11 SECTIONS',
+      coverTitle: 'Logobook & Brand Guidelines',
+      coverSub: 'Brand identity guidelines · digital product development company',
+      h01:'Brand idea', h01s:'Идея бренда', h02:'Logo', h02s:'Логотип', h03:'Color', h03s:'Цвет',
+      h04:'Typography', h04s:'Типографика', h05:'Patterns & techniques', h05s:'Графические приёмы',
+      h06:'Icons & imagery', h06s:'Иконки и иллюстрации', h07:'Tone of voice', h07s:'Тон коммуникации',
+      h08:'Applications', h08s:'Носители', h09:'Frontend rules', h09s:'Веб и вёрстка',
+      h10:'Motion', h10s:'Моушн', h11:'Particle logo', h11s:'Particle dissolve · live',
+      s01a:'The name is built from two keys. ', s01b:' is engineering control: precision, systems, managed complexity. ',
+      s01c:' is the calm of the result: silence, minimum, nothing extra. The brand lives in a dark "terminal" space where order assembles out of particle noise.',
+      cardCtrl:'Engineering. Grids, monospace type, HUD markup, technical annotations, versions and indices.',
+      cardZen:'Zen. Emptiness as material: lots of black, one focal point per screen, a slow calm rhythm.',
+      chips:['engineering','zen','vibe-code','monochrome','generative'],
+      s02lead:'The logo is two keycaps: Ctrl with "^" and Zen with "○" (ensō, the zen circle). The logotype face is Consolas. The primary environment is dark; the light version is for paper and light surfaces.',
+      cap1:'Primary · on dark', cap2:'Inverse · on light', cap3:'Mark · Zen key: avatars, favicon', cap4:'Clear space: X = ¼ key height',
+      m1l:'Min size · screen', m1n:'full logo width; mark from 24 px',
+      m2l:'Min size · print', m2n:'full logo width; mark from 6 mm',
+      m3l:'Keycap geometry', m3n:'corner radius = 1/16 of side; stroke = 1/58 of side',
+      misuse:'Misuse',
+      dontsL:["Don't recolor","Don't tilt or rotate","Don't stretch or squash",'No glow or shadows','No busy backgrounds',"Don't go below 120 px"],
+      s03lead:'The palette is strictly monochrome — like a terminal. Color is allowed only inside content (product screenshots, art), never in identity elements or UI chrome.',
+      colorUses:['page background','cards, keycaps','borders, lines','secondary text, HUD','text, logo','accent: cursor, indices'],
+      propLabel:'Proportions · Пропорции',
+      cb1:'White is a scarce resource: no more than ~15% of the screen — it marks what matters.',
+      cb2:'Text on Void/Carbon is Paper (contrast ≥ 15:1) or Ash for secondary (≥ 4.6:1, AA).',
+      sigA:'The accent ', sigB:' is the only color in the system. Micro-elements only: blinking cursor, section indices, "—" markers, statuses. No more than ~1% of screen area.',
+      cb4:'Signal is never used for button fills, large text, icons or the logo — those stay monochrome.',
+      cb5:'No colored gradients. Depth comes from light only: white at 4–13% opacity.',
+      f1l:'Display · headings, labels, code',
+      f1p:'The logo uses Consolas. On the web and in layouts it is replaced by JetBrains Mono (Google Fonts, includes Cyrillic). Weights 400 / 500 / 700. Headings — 500, tracking −0.02em.',
+      f2l:'Body · text, interfaces',
+      f2p:'For paragraphs longer than two lines and dense interfaces. Weights 400 / 500 / 600. Also includes Cyrillic — bilingual texts look consistent.',
+      tsSamples:['Ctrl+Zen','Calm engineering','Спокойная разработка, в проде','Body text is set in IBM Plex Sans — a calm, neutral grotesque.','HUD LABEL · ID 091 / ACT'],
+      tb1:"Captions and labels are always mono, uppercase, +0.08em tracking — the 'HUD voice'.",
+      tb2a:'The name is written only as ', tb2b:' — with a plus, no spaces, both capitalized.',
+      tb3:'At most two type sizes per screen besides body text. Emptiness matters more than words.',
+      s05a:'Six brand textures from the moodboard. All reproduce in pure CSS — the samples below are live; the snippet under each can be copied into code. Rule: ',
+      s05strong:'one texture per screen', s05b:', over black, subtle.',
+      p2:'dot grid + mask-image: linear-gradient(...) — transitions made of particles, not smooth fades',
+      p3:'2 × repeating-radial-gradient with offset centers — for covers and placeholders',
+      p4:'linear grid + transform: perspective() rotateX(58deg)',
+      p5:'bracket corners, crosshairs, 01/02 indices, coordinates — mono 10–11px, Ash',
+      p6:'rgba(255,255,255,.05) + blur(10px) + top inset highlight — floating panels only',
+      iconsLabel:'Icons · Иконки', imgLabel:'Imagery · Иллюстрации',
+      ib1:'1.5 px stroke, no fills, 24×24 grid, square line caps;',
+      ib2:'keyboard & terminal vocabulary: ^, ○, +, /, brackets, arrows;',
+      ib3:'ready-made sets: Lucide or Feather at stroke 1.5 match the style.',
+      mb1a:'style: ', mb1b:" — particle fields, particle dissolve/morph ('sand' assembling into a shape), star noise, wireframe objects — b/w on black;",
+      demoLink:'live demo →',
+      mb2:"one glowing focal point, emptiness around it (the 'zen' principle);",
+      mb3:'photos: convert to b/w, add grain, darken to 60%, overlay HUD annotations.',
+      toneCards:[
+        {t:'Short', d:'Like a terminal command. One sentence instead of three.'},
+        {t:'Calm', d:"No hype, exclamation marks or 'revolutions'. Confidence is quiet."},
+        {t:'Precise', d:'Numbers, dates, versions. Specifics over adjectives.'},
+        {t:'Wry', d:'A light touch of geek humor, sparingly. Never at the cost of clarity.'}],
+      doHead:'✓ WE WRITE', dontHead:"✕ WE DON'T",
+      doItems:['"Shipped in 6 weeks. It works."','"MVP → production. No wasted motion."','"Ship calm. Ctrl+Zen."'],
+      dontItems:['"Revolutionary innovative turnkey solutions!!!"','"The #1 best team on the market 🚀🔥"',"Corporate-speak: 'we perform development activities'"],
+      car1:'Business card 88×50 mm · logo top, details along the bottom edge',
+      car2:'16:9 slide · HUD running heads, headline at the left edge',
+      car3:'1:1 post · mark in the corner, one idea, one texture',
+      car4:'Web · header with the mark, hero without images — type and texture',
+      webB:['12-column grid, 1180px container, all spacing in multiples of 8.',
+        'Borders — 1px solid var(--cz-line). No shadows: depth comes from surface tone and borders.',
+        "Buttons are 'keycaps': carbon fill, --cz-r-key radius, pressed down 2px on click.",
+        'Focus — 1px dashed var(--cz-ash), offset 3px. No blue outlines.'],
+      w5a:'Textures from section ', w5b:' — CSS gradients only, never images.',
+      btn1:'Discuss a project', btnHint:'← press: the keycap sinks',
+      s10a:'Motion is calm and mechanical, like keyboard feedback. Nothing springs or flies: short precise transitions, discrete steps instead of smooth morphs. Always respect ', s10b:'.',
+      mo1:"animation: blink 1.1s steps(1) infinite — the brand 'pulse', one per screen",
+      mo2:'slow background-position shift, 8–20s linear — hero backgrounds',
+      mo3:'opacity 0→1 + translateY(12px→0), 480ms var(--cz-ease), 60ms stagger',
+      fadeDemo:'block enter',
+      motionChips:['--cz-fast 120ms · hovers, presses','--cz-base 240ms · state transitions','--cz-slow 480ms · section reveals','easing cubic-bezier(0.2, 0, 0, 1)'],
+      s11lead:"The reference brand animation: 'sand' particles assemble into the logo and dissolve (scatter → assemble → hold → dissolve loop). Reference for intros, hero blocks and video. The cursor scatters particles.",
+      openLink:'Open standalone →',
+      footer:'CTRL+ZEN · BRAND GUIDELINES · V 1.0 · 2026 · logo files: /assets',
+    }
+  };
   renderVals() {
+    const lang = this.state.lang, t = this.L[lang], accent = this.props.accent ?? '#F5F4F0';
+    const tocRu = [
+      {n:'01', ru:'Идея бренда', en:'Idea'},{n:'02', ru:'Логотип', en:'Logo'},{n:'03', ru:'Цвет', en:'Color'},
+      {n:'04', ru:'Типографика', en:'Type'},{n:'05', ru:'Графические приёмы', en:'Patterns'},
+      {n:'06', ru:'Иконки и иллюстрации', en:'Imagery'},{n:'07', ru:'Тон коммуникации', en:'Voice'},
+      {n:'08', ru:'Носители', en:'Applications'},{n:'09', ru:'Веб и вёрстка', en:'Frontend'},
+      {n:'10', ru:'Моушн', en:'Motion'},{n:'11', ru:'Лого из частиц', en:'Live'}];
+    const tocEn = [
+      {n:'01', ru:'Идея', en:'Brand idea'},{n:'02', ru:'Логотип', en:'Logo'},{n:'03', ru:'Цвет', en:'Color'},
+      {n:'04', ru:'Типографика', en:'Typography'},{n:'05', ru:'Приёмы', en:'Patterns'},
+      {n:'06', ru:'Иконки', en:'Icons & imagery'},{n:'07', ru:'Тон', en:'Tone of voice'},
+      {n:'08', ru:'Носители', en:'Applications'},{n:'09', ru:'Вёрстка', en:'Frontend'},
+      {n:'10', ru:'Моушн', en:'Motion'},{n:'11', ru:'Частицы', en:'Particle logo'}];
+    const toc = (lang === 'ru' ? tocRu : tocEn).map(x => ({n:x.n, a: lang==='ru'?x.ru:x.en, b: lang==='ru'?x.en:x.ru}));
+    const colorMeta = [['Void','#0A0A0B'],['Carbon','#161618'],['Graphite','#2A2A2C'],['Ash','#8A8A8E'],['Paper','#F5F4F0'],['Signal', this.props.accentSignal ?? '#4DE38A']];
+    const colors = colorMeta.map((c,i) => ({name:c[0], hex:c[1], use:t.colorUses[i]}));
+    const tsMeta = [
+      {spec:'Display 64/1.05 · Mono 500', css:"500 64px/1.05 'JetBrains Mono',monospace", ls:'-0.03em', tt:'none'},
+      {spec:'H1 44/1.1 · Mono 500', css:"500 44px/1.1 'JetBrains Mono',monospace", ls:'-0.02em', tt:'none'},
+      {spec:'H2 28/1.2 · Mono 500', css:"500 28px/1.2 'JetBrains Mono',monospace", ls:'-0.02em', tt:'none'},
+      {spec:'Body 17/1.65 · Sans 400', css:"400 17px/1.65 'IBM Plex Sans',sans-serif", ls:'0', tt:'none'},
+      {spec:'Caption 12/1.4 · Mono 400', css:"400 12px/1.4 'JetBrains Mono',monospace", ls:'0.08em', tt:'uppercase'}];
+    const typeScale = tsMeta.map((x,i) => ({...x, sample:t.tsSamples[i]}));
+    const dontMeta = [
+      {filter:'sepia(1) saturate(6) hue-rotate(70deg)', transform:'none', bg:'none'},
+      {filter:'none', transform:'rotate(-10deg)', bg:'none'},
+      {filter:'none', transform:'scale(1.35, 0.9)', bg:'none'},
+      {filter:'drop-shadow(0 0 14px rgba(245,244,240,0.9))', transform:'none', bg:'none'},
+      {filter:'none', transform:'none', bg:'repeating-linear-gradient(45deg, #2E2E31 0 7px, #111113 7px 14px)'},
+      {filter:'none', transform:'scale(0.45)', bg:'none'}];
+    const donts = dontMeta.map((x,i) => ({...x, label:t.dontsL[i]}));
+    const on = '#F5F4F0', onFg = '#0A0A0B', off = 'transparent', offFg = '#8A8A8E';
     return {
-      accent: this.props.accent ?? '#F5F4F0',
-      showGrid: this.props.showGrid ?? false,
-      noop: () => {},
-      toc: [
-        {n:'01', ru:'Идея бренда', en:'Idea'},
-        {n:'02', ru:'Логотип', en:'Logo'},
-        {n:'03', ru:'Цвет', en:'Color'},
-        {n:'04', ru:'Типографика', en:'Type'},
-        {n:'05', ru:'Графические приёмы', en:'Patterns'},
-        {n:'06', ru:'Иконки и иллюстрации', en:'Imagery'},
-        {n:'07', ru:'Тон коммуникации', en:'Voice'},
-        {n:'08', ru:'Носители', en:'Applications'},
-        {n:'09', ru:'Веб и вёрстка', en:'Frontend'},
-        {n:'10', ru:'Моушн', en:'Motion'},
-        {n:'11', ru:'Лого из частиц', en:'Live'},
-      ],
-      colors: [
-        {name:'Void', hex:'#0A0A0B', use:'фон страницы'},
-        {name:'Carbon', hex:'#161618', use:'карточки, клавиши'},
-        {name:'Graphite', hex:'#2A2A2C', use:'границы, линии'},
-        {name:'Ash', hex:'#8A8A8E', use:'вторичный текст, HUD'},
-        {name:'Paper', hex:'#F5F4F0', use:'текст, лого'},
-        {name:'Signal', hex:this.props.accent ?? '#4DE38A', use:'акцент: курсор, индексы'},
-      ],
-      typeScale: [
-        {spec:'Display 64/1.05 · Mono 500', css:"500 64px/1.05 'JetBrains Mono',monospace", ls:'-0.03em', tt:'none', sample:'Ctrl+Zen'},
-        {spec:'H1 44/1.1 · Mono 500', css:"500 44px/1.1 'JetBrains Mono',monospace", ls:'-0.02em', tt:'none', sample:'Спокойная разработка'},
-        {spec:'H2 28/1.2 · Mono 500', css:"500 28px/1.2 'JetBrains Mono',monospace", ls:'-0.02em', tt:'none', sample:'Calm engineering, shipped'},
-        {spec:'Body 17/1.65 · Sans 400', css:"400 17px/1.65 'IBM Plex Sans',sans-serif", ls:'0', tt:'none', sample:'Основной текст набирается IBM Plex Sans — спокойный нейтральный гротеск.'},
-        {spec:'Caption 12/1.4 · Mono 400', css:"400 12px/1.4 'JetBrains Mono',monospace", ls:'0.08em', tt:'uppercase', sample:'HUD-метка · ID 091 / ACT'},
-      ],
-      donts: [
-        {label:'Не перекрашивать', filter:'sepia(1) saturate(6) hue-rotate(70deg)', transform:'none', bg:'none', font:'inherit'},
-        {label:'Не наклонять и не вращать', filter:'none', transform:'rotate(-10deg)', bg:'none', font:'inherit'},
-        {label:'Не растягивать и не сжимать', filter:'none', transform:'scale(1.35, 0.9)', bg:'none', font:'inherit'},
-        {label:'Не добавлять свечение и тени', filter:'drop-shadow(0 0 14px rgba(245,244,240,0.9))', transform:'none', bg:'none', font:'inherit'},
-        {label:'Не размещать на пёстром фоне', filter:'none', transform:'none', bg:'repeating-linear-gradient(45deg, #2E2E31 0 7px, #111113 7px 14px)', font:'inherit'},
-        {label:'Не уменьшать ниже 120 px', filter:'none', transform:'scale(0.45)', bg:'none', font:'inherit'},
-      ],
+      t, toc, colors, typeScale, donts,
+      accent, showGrid: this.props.showGrid ?? false, noop: () => {},
+      setRu: () => this.setState({lang:'ru'}), setEn: () => this.setState({lang:'en'}),
+      ruBg: lang==='ru'?on:off, ruFg: lang==='ru'?onFg:offFg,
+      enBg: lang==='en'?on:off, enFg: lang==='en'?onFg:offFg,
     };
   }
 }
