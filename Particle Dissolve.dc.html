@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>Ctrl+Zen — Particle Dissolve</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<style>
+html,body{margin:0;padding:0;height:100%;background:#0A0A0B;}
+a{color:#F5F4F0;text-decoration:underline;text-underline-offset:3px;text-decoration-color:#5A5A5E;}
+a:hover{text-decoration-color:#F5F4F0;}
+</style>
+</helmet>
+<div data-screen-label="Particle Dissolve" style="position:relative;width:100%;height:100%;min-height:420px;max-height:100dvh;background:#0A0A0B;overflow:hidden;font-family:'JetBrains Mono',Consolas,monospace;">
+  <canvas ref="{{ setCanvas }}" style="position:absolute;inset:0;width:100%;height:100%;display:block;"></canvas>
+  <div style="position:absolute;inset:24px;pointer-events:none;">
+    <div style="position:absolute;top:0;left:0;width:18px;height:18px;border-top:1px solid #3A3A3C;border-left:1px solid #3A3A3C;"></div>
+    <div style="position:absolute;top:0;right:0;width:18px;height:18px;border-top:1px solid #3A3A3C;border-right:1px solid #3A3A3C;"></div>
+    <div style="position:absolute;bottom:0;left:0;width:18px;height:18px;border-bottom:1px solid #3A3A3C;border-left:1px solid #3A3A3C;"></div>
+    <div style="position:absolute;bottom:0;right:0;width:18px;height:18px;border-bottom:1px solid #3A3A3C;border-right:1px solid #3A3A3C;"></div>
+    <div style="position:absolute;top:0;left:30px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.08em;">CTRL+ZEN / PARTICLE DISSOLVE</div>
+    <div style="position:absolute;top:0;right:30px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.08em;">GENERATIVE / CANVAS 2D</div>
+    <div style="position:absolute;bottom:0;left:30px;font:400 11px 'JetBrains Mono',monospace;letter-spacing:0.08em;color:{{ accent }};"><span ref="{{ setLabel }}">SCATTER</span><span style="display:inline-block;width:6px;height:11px;background:{{ accent }};vertical-align:-1px;margin-left:8px;"></span></div>
+    <div style="position:absolute;bottom:0;right:30px;font:400 11px 'JetBrains Mono',monospace;color:#8A8A8E;letter-spacing:0.08em;">КУРСОР РАССЕИВАЕТ ЧАСТИЦЫ</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:&quot;100%&quot;,&quot;height&quot;:&quot;100%&quot;},&quot;mode&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;default&quot;:&quot;логотип&quot;,&quot;options&quot;:[&quot;логотип&quot;,&quot;знак Zen&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Частицы&quot;},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;default&quot;:&quot;#4DE38A&quot;,&quot;options&quot;:[&quot;#4DE38A&quot;,&quot;#F5F4F0&quot;,&quot;#FF5A3C&quot;,&quot;#7AA7FF&quot;],&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Стиль&quot;},&quot;density&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:7000,&quot;min&quot;:2000,&quot;max&quot;:16000,&quot;step&quot;:500,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Частицы&quot;}}">
+class Component extends DCLogic {
+  setCanvas = (el) => { this.cv = el; };
+  setLabel = (el) => { this.label = el; };
+  renderVals() {
+    return { setCanvas: this.setCanvas, setLabel: this.setLabel, accent: this.props.accent ?? '#4DE38A' };
+  }
+  componentDidMount() {
+    const cv = this.cv, ctx = cv.getContext('2d');
+    const accent = this.props.accent ?? '#4DE38A';
+    const N = Math.round(this.props.density ?? 9000);
+    let W, H, dpr;
+    const resize = () => {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = cv.clientWidth; H = cv.clientHeight;
+      cv.width = W * dpr; cv.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    this._onResize = resize;
+    window.addEventListener('resize', resize);
+    const mouse = { x: -9999, y: -9999 };
+    this._onMove = (e) => { const r = cv.getBoundingClientRect(); mouse.x = e.clientX - r.left; mouse.y = e.clientY - r.top; };
+    this._onLeave = () => { mouse.x = -9999; mouse.y = -9999; };
+    cv.addEventListener('pointermove', this._onMove);
+    cv.addEventListener('pointerleave', this._onLeave);
+    const fullLogo = (this.props.mode ?? 'логотип') !== 'знак Zen';
+    const pts = [];
+    let aspect = 1;
+    const img = new Image();
+    img.onload = () => {
+      const SW = fullLogo ? 640 : 320;
+      const SH = fullLogo ? 264 : 320;
+      aspect = SH / SW;
+      const oc = document.createElement('canvas');
+      oc.width = SW; oc.height = SH;
+      const octx = oc.getContext('2d');
+      octx.drawImage(img, 10, 10, SW - 20, SH - 20);
+      const d = octx.getImageData(0, 0, SW, SH).data;
+      for (let y = 0; y < SH; y += 2) for (let x = 0; x < SW; x += 2) {
+        const i = (y * SW + x) * 4;
+        if (d[i + 3] > 60 && d[i] > 110) pts.push([x / SW - 0.5, (y / SH - 0.5) * aspect]);
+      }
+      start();
+    };
+    img.src = fullLogo ? 'assets/logo-dark.svg' : 'assets/icon-zen-dark.svg';
+    const parts = [];
+    const start = () => {
+      for (let i = 0; i < N; i++) {
+        const t = pts[(Math.random() * pts.length) | 0];
+        parts.push({
+          x: Math.random() * W, y: Math.random() * H, vx: 0, vy: 0,
+          nx: t[0], ny: t[1],
+          a: Math.random() < 0.012, s: 0.8 + Math.random() * 1.1,
+          ph: Math.random() * 6.283, burst: false,
+        });
+      }
+      loop();
+    };
+    const CYCLE = 11;
+    let lastPhase = '';
+    const loop = () => {
+      this._raf = requestAnimationFrame(loop);
+      const now = performance.now() / 1000;
+      const T = now % CYCLE;
+      const size = fullLogo ? Math.min(W * 0.78, H * 1.65) : Math.min(W, H) * 0.6;
+      const cx = W / 2, cy = H / 2;
+      let phase, k;
+      if (T < 3) { phase = 'ASSEMBLE'; k = 0.004 + 0.028 * (T / 3); }
+      else if (T < 7) { phase = 'HOLD'; k = 0.032; }
+      else if (T < 8.2) { phase = 'DISSOLVE'; k = 0; }
+      else { phase = 'SCATTER'; k = 0; }
+      if (phase !== lastPhase && this.label) { this.label.textContent = phase; lastPhase = phase; }
+      ctx.fillStyle = 'rgba(10,10,11,0.32)';
+      ctx.fillRect(0, 0, W, H);
+      for (let i = 0; i < parts.length; i++) {
+        const p = parts[i];
+        if (phase === 'DISSOLVE') {
+          if (!p.burst) { p.burst = true; const a = Math.random() * 6.283, f = 1.5 + Math.random() * 4.5; p.vx += Math.cos(a) * f; p.vy += Math.sin(a) * f - 1.2; }
+          p.vy += 0.07; p.vx *= 0.992; p.vy *= 0.992;
+        } else {
+          p.burst = false;
+          if (k > 0) {
+            p.vx += (cx + p.nx * size - p.x) * k;
+            p.vy += (cy + p.ny * size - p.y) * k;
+            p.vx *= 0.86; p.vy *= 0.86;
+          } else {
+            p.vx += (Math.random() - 0.5) * 0.18;
+            p.vy += (Math.random() - 0.5) * 0.18 - 0.008;
+            p.vx *= 0.97; p.vy *= 0.97;
+          }
+        }
+        const dx = p.x - mouse.x, dy = p.y - mouse.y, dd = dx * dx + dy * dy;
+        if (dd < 8100 && dd > 0.01) { const f = (1 - Math.sqrt(dd) / 90) * 1.6; p.vx += (dx / Math.sqrt(dd)) * f; p.vy += (dy / Math.sqrt(dd)) * f; }
+        p.x += p.vx; p.y += p.vy;
+        if (p.y > H + 8) { p.y = -8; p.x = Math.random() * W; p.vy *= 0.3; }
+        if (p.x > W + 8) p.x = -8; else if (p.x < -8) p.x = W + 8;
+        const tw = 0.45 + 0.55 * Math.abs(Math.sin(now * 1.7 + p.ph));
+        ctx.fillStyle = p.a ? accent : 'rgba(245,244,240,' + tw.toFixed(2) + ')';
+        ctx.fillRect(p.x, p.y, p.s, p.s);
+      }
+    };
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this._raf);
+    window.removeEventListener('resize', this._onResize);
+    if (this.cv) { this.cv.removeEventListener('pointermove', this._onMove); this.cv.removeEventListener('pointerleave', this._onLeave); }
+  }
+}
+</script>
+</body>
+</html>
